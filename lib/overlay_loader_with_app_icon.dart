@@ -28,7 +28,7 @@ class OverlayLoaderWithAppIcon extends StatelessWidget {
   final double borderRadius;
   final double overlayOpacity;
   final Color? overlayBackgroundColor;
-  final Color? progressColor;
+  final Color? circularProgressColor;
 
   OverlayLoaderWithAppIcon(
       {required this.isLoading,
@@ -37,7 +37,7 @@ class OverlayLoaderWithAppIcon extends StatelessWidget {
       this.appIconSize = 50,
       this.borderRadius = 15,
       this.overlayOpacity = 0.5,
-      this.progressColor,
+      this.circularProgressColor,
       this.overlayBackgroundColor});
   @override
   Widget build(BuildContext context) {
@@ -49,21 +49,23 @@ class OverlayLoaderWithAppIcon extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: appIconSize,
-                  height: appIconSize,
-                  child: appIcon,
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              SizedBox(
+                width: appIconSize * 2,
+                height: appIconSize * 2,
+                child: LoadingAnimationWidget.threeArchedCircle(
+                  color: circularProgressColor ?? Colors.white,
+                  size: appIconSize * 2,
                 ),
-                LoadingAnimationWidget.stretchedDots(
-                  color: progressColor ?? Colors.white,
-                  size: appIconSize,
-                ),
-              ],
-            ),
+              ),
+              SizedBox(
+                width: appIconSize,
+                height: appIconSize,
+                child: appIcon,
+              ),
+            ],
           ),
         ),
       ), //Change this loading overlay
@@ -76,7 +78,7 @@ class OverlayLoaderWithAppIcon extends StatelessWidget {
 class OverLayAnimation extends StatefulWidget {
   final bool isLoading;
   final double opacity;
-  final Color? color;
+  final Color color;
   final Widget progressIndicator;
   final Widget child;
 
@@ -85,7 +87,7 @@ class OverLayAnimation extends StatefulWidget {
     required this.child,
     this.opacity = 0.5,
     this.progressIndicator = const CircularProgressIndicator(),
-    this.color,
+    required this.color,
   });
 
   @override
@@ -151,7 +153,7 @@ class _OverLayAnimationState extends State<OverLayAnimation>
             Opacity(
               child: ModalBarrier(
                 dismissible: false,
-                color: widget.color ?? Theme.of(context).colorScheme.background,
+                color: widget.color,
               ),
               opacity: widget.opacity,
             ),

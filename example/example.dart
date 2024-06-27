@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
     return OverlayLoaderWithAppIcon(
       isLoading: _isLoading,
       overlayBackgroundColor: Colors.black,
-      progressColor: Color(0xff670099),
+      circularProgressColor: Color(0xff670099),
       appIcon: Image.asset('images/appIcon.png'),
       child: Scaffold(
         appBar: AppBar(
