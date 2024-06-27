@@ -1,6 +1,7 @@
 library overlay_loader_with_app_icon;
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 /// Inspired by https://pub.dev/packages/loading_overlay package
 ///
@@ -27,51 +28,49 @@ class OverlayLoaderWithAppIcon extends StatelessWidget {
   final double borderRadius;
   final double overlayOpacity;
   final Color? overlayBackgroundColor;
-  final Color ?circularProgressColor;
+  final Color? progressColor;
 
-
-  OverlayLoaderWithAppIcon({required this.isLoading, required this.child, required this.appIcon, this.appIconSize=50,
-    this.borderRadius=15, this.overlayOpacity=0.5, this.circularProgressColor, this.overlayBackgroundColor});
+  OverlayLoaderWithAppIcon(
+      {required this.isLoading,
+      required this.child,
+      required this.appIcon,
+      this.appIconSize = 50,
+      this.borderRadius = 15,
+      this.overlayOpacity = 0.5,
+      this.progressColor,
+      this.overlayBackgroundColor});
   @override
   Widget build(BuildContext context) {
     return OverLayAnimation(
       isLoading: isLoading,
       opacity: overlayOpacity,
-      color: overlayBackgroundColor??Theme.of(context).colorScheme.background,
+      color: overlayBackgroundColor ?? Theme.of(context).colorScheme.background,
       progressIndicator: Material(
         borderRadius: BorderRadius.circular(borderRadius),
         child: Padding(
-          padding:  EdgeInsets.all(20),
-          child: Stack(
+          padding: EdgeInsets.all(20),
+          child: Column(
             children: [
-              Positioned(
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: CircularProgressIndicator(
-                  color:circularProgressColor??Theme.of(context).colorScheme.background,
-                  strokeWidth: 2,
-                ),
-              ),
               SizedBox(
                 width: appIconSize,
                 height: appIconSize,
                 child: appIcon,
               ),
+              LoadingAnimationWidget.stretchedDots(
+                color: progressColor ?? Colors.white,
+                size: 200,
+              ),
             ],
           ),
         ),
-      ),//Change this loading overlay
+      ), //Change this loading overlay
       child: child,
     );
   }
 }
 
-
 //OverLayAnimation class for ModalBarrier
 class OverLayAnimation extends StatefulWidget {
-
   final bool isLoading;
   final double opacity;
   final Color? color;
@@ -90,7 +89,8 @@ class OverLayAnimation extends StatefulWidget {
   State<OverLayAnimation> createState() => _OverLayAnimationState();
 }
 
-class _OverLayAnimationState extends State<OverLayAnimation> with SingleTickerProviderStateMixin{
+class _OverLayAnimationState extends State<OverLayAnimation>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   bool? _overlayVisible;
@@ -101,11 +101,16 @@ class _OverLayAnimationState extends State<OverLayAnimation> with SingleTickerPr
   void initState() {
     super.initState();
     _overlayVisible = false;
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
     _animation.addStatusListener((status) {
-      status == AnimationStatus.forward ? setState(() => {_overlayVisible = true}) : null;
-      status == AnimationStatus.dismissed ? setState(() => {_overlayVisible = false}) : null;
+      status == AnimationStatus.forward
+          ? setState(() => {_overlayVisible = true})
+          : null;
+      status == AnimationStatus.dismissed
+          ? setState(() => {_overlayVisible = false})
+          : null;
     });
     if (widget.isLoading) {
       _controller.forward();
