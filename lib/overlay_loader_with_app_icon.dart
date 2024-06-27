@@ -51,6 +51,7 @@ class OverlayLoaderWithAppIcon extends StatelessWidget {
           padding: EdgeInsets.all(20),
           child: Center(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
                   width: appIconSize,
