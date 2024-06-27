@@ -49,18 +49,20 @@ class OverlayLoaderWithAppIcon extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              SizedBox(
-                width: appIconSize,
-                height: appIconSize,
-                child: appIcon,
-              ),
-              LoadingAnimationWidget.stretchedDots(
-                color: progressColor ?? Colors.white,
-                size: 200,
-              ),
-            ],
+          child: Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  width: appIconSize,
+                  height: appIconSize,
+                  child: appIcon,
+                ),
+                LoadingAnimationWidget.stretchedDots(
+                  color: progressColor ?? Colors.white,
+                  size: appIconSize,
+                ),
+              ],
+            ),
           ),
         ),
       ), //Change this loading overlay
